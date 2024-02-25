@@ -1,7 +1,7 @@
 {
-  "name": "boilerplate",
+  "name": "frontend",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/boilerplate/src",
+  "sourceRoot": "apps/frontend/src",
   "projectType": "application",
   "targets": {},
   "tags": []
