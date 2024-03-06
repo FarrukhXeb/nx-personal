@@ -8,4 +8,8 @@ export default () => ({
     port: parseInt(process.env.DB_PORT, 10),
     name: process.env.DB_NAME,
   },
+  openai: {
+    key: process.env.OPENAI_KEY,
+    baseUrl: process.env.OPENAI_BASE_URL,
+  },
 });

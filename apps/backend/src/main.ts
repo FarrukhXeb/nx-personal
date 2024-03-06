@@ -4,6 +4,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
+import { OpenAIService } from './app/open-ai/open-ai.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -26,6 +27,9 @@ async function bootstrap() {
   Logger.log(
     `🚀 Application is running on: http://localhost:${port}/${globalPrefix} in ${env}`
   );
+
+  const openAIService = app.get(OpenAIService);
+  await openAIService.chatCompletion('What is the meaning of life?');
 }
 
 bootstrap();
