@@ -7,6 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 import config from './config';
 import { UserModule } from './user/user.module';
 import { OpenAIModule } from './open-ai/open-ai.module';
+import { WebsocketModule } from './websocket/websocket.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { OpenAIModule } from './open-ai/open-ai.module';
     }),
     DatabaseModule,
     UserModule,
+    WebsocketModule,
     OpenAIModule,
   ],
   controllers: [AppController],
