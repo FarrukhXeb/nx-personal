@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
   OpenAIClient,
@@ -6,22 +6,15 @@ import {
   ChatRequestMessage,
   ChatCompletions,
 } from '@azure/openai';
+import { CookingPrompt } from './cooking-prompt';
 
 @Injectable()
 export class OpenAIService {
   private client: OpenAIClient;
   private deploymentId = 'gpt-4-32k-model';
-  private messages: ChatRequestMessage[] = [
-    {
-      role: 'system',
-      content: 'You are a helpful assistant. You will talk like a pirate.',
-    },
-    { role: 'user', content: 'Can you help me?' },
-    {
-      role: 'assistant',
-      content: 'Arrrr! Of course, me hearty! What can I do for ye?',
-    },
-  ];
+
+  private sessions: Map<string, ChatRequestMessage[]> = new Map();
+  private logger: Logger = new Logger('OpenAIService');
 
   constructor(private configService: ConfigService) {
     this.client = new OpenAIClient(
@@ -32,9 +25,22 @@ export class OpenAIService {
     );
   }
 
+  async getOrCreateSession(sessionId: string): Promise<ChatRequestMessage[]> {
+    let session: ChatRequestMessage[] = this.sessions.get(sessionId);
+    if (session === undefined) {
+      session = [...CookingPrompt];
+      this.sessions.set(sessionId, session);
+    }
+    return session;
+  }
+
+  private updateSession(sessionId: string, messages: ChatRequestMessage[]) {
+    this.sessions.set(sessionId, messages);
+  }
+
   async chatCompletion(prompt: string): Promise<string> {
     const messages: ChatRequestMessage[] = [
-      ...this.messages,
+      ...CookingPrompt,
       { role: 'user', content: prompt },
     ];
     const completion: ChatCompletions = await this.client.getChatCompletions(
@@ -46,14 +52,18 @@ export class OpenAIService {
   }
 
   async streamChatCompletion(
+    sessionId: string,
     prompt: string,
-    cb: (delta: string, error: Error) => void
+    cb: (delta: string, error: Error) => void,
+    onCompletion?: () => void
   ) {
     try {
-      const messages: ChatRequestMessage[] = [
-        ...this.messages,
-        { role: 'user', content: prompt },
-      ];
+      const messages = await this.getOrCreateSession(sessionId);
+      messages.push({ role: 'user', content: prompt });
+      this.updateSession(sessionId, messages);
+
+      this.logger.log(`Current session: ${JSON.stringify(messages)}`);
+
       const events = await this.client.streamChatCompletions(
         this.deploymentId,
         messages
@@ -66,6 +76,10 @@ export class OpenAIService {
             cb(delta, null);
           }
         }
+      }
+
+      if (onCompletion) {
+        onCompletion();
       }
     } catch (error) {
       cb(null, error);
