@@ -1,1 +1,38 @@
 /* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 225, 50%, 21%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: #5F5D9C;
+    --primary-foreground: 210 40% 98%;
+    --secondary: #6196A6;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 220 33% 96%;
+    --muted-foreground: 226 19% 55%;
+    --accent: #A4CE95;
+    --accent-foreground: #F4EDCC;
+    --neutral: 0 0 100%;
+    --neutral-foreground: 0deg 0% 13.33%;
+    --destructive: 0 79% 54%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+    --link: 220, 82%, 44%;
+    --success: 151, 91%, 37%, 1;
+    --blue-background: 220, 38%, 95%, 1;
+    --blue-shadow: 220, 50%, 91%, 1;
+    --warning: 27, 87%, 55%;
+    --radius: 0.5rem;
+    --info-background: hsl(220, 79%, 96%);
+    --highlight-background: hsl(220, 33%, 96%);
+  }
+}
