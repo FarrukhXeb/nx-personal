@@ -6,6 +6,8 @@ import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
 import config from './config';
 import { UserModule } from './user/user.module';
+import { VapiModule } from './vapi/vapi.module';
+import { OpenAIModule } from './openai/openai.module';
 
 @Module({
   imports: [
@@ -16,6 +18,8 @@ import { UserModule } from './user/user.module';
     }),
     DatabaseModule,
     UserModule,
+    VapiModule,
+    OpenAIModule,
   ],
   controllers: [AppController],
   providers: [AppService],
